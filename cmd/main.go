@@ -1,9 +1,8 @@
 package main
 
 import (
-	"context"
+	"fduysp/go-es/pkg/util"
 	"flag"
-	"fmt"
 	"github.com/golang/glog"
 	"github.com/olivere/elastic/v7"
 )
@@ -20,11 +19,22 @@ func main() {
 	if err != nil {
 		glog.Fatalln("error to create es client, ", err)
 	}
-	info, code, err := esClient.Ping(HOST).Do(context.Background())
-	if err != nil {
-		glog.Fatalln("error to ping HOST")
+	esw := &util.ESWorker{
+		Client: esClient,
 	}
-	fmt.Println(code)
-	glog.Info("Ping es successful " + info.Version.Number)
+	flag := esw.CreateIndex()
+	if flag {
+		esw.InsertData()
+	}
+	//info, code, err := esClient.Ping(HOST).Do(context.Background())
+	//if err != nil {
+	//	glog.Fatalln("error to ping HOST")
+	//}
+	//fmt.Println(code)
+	//glog.Info("Ping es successful " + info.Version.Number)
+	//
+	//ver, _ := esClient.ElasticsearchVersion(HOST)
+	//glog.Info("version: ", ver)
+
 	defer glog.Flush()
 }

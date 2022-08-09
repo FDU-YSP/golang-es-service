@@ -22,9 +22,15 @@ func main() {
 	esw := &util.ESWorker{
 		Client: esClient,
 	}
-	flag := esw.CreateIndex()
+	flag := esw.CreateIndex("full-doc-test")
 	if flag {
-		esw.InsertData()
+		text := "Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name " +
+			"'mongoConnectionPoolTagsProvider' defined in class path resource [org/springframework/boot/actuate/autoconfigure/metrics/" +
+			"mongo/MongoMetricsAutoConfiguration$MongoConnectionPoolMetricsConfiguration.class]: Post-processing of merged bean definition" +
+			" failed; nested exception is java.lang.IllegalStateException: Failed to introspect Class [io.micrometer.core.instrument.binder" +
+			".mongodb.DefaultMongoConnectionPoolTagsProvider] from ClassLoader [sun.misc.Launcher$AppClassLoader@18b4aac2]\n\tat org." +
+			"springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:597)"
+		esw.InsertData(text)
 	}
 	//info, code, err := esClient.Ping(HOST).Do(context.Background())
 	//if err != nil {
